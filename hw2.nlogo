@@ -35,10 +35,10 @@ to colour-patches
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-692
-493
+362
+23
+844
+506
 -1
 -1
 9.3
@@ -111,10 +111,10 @@ NIL
 HORIZONTAL
 
 PLOT
-714
-18
-1215
-493
+866
+31
+1367
+506
 c levels
 NIL
 NIL
@@ -127,6 +127,23 @@ false
 "" ""
 PENS
 "pen-0" 0.1 1 -16382462 true "" "histogram [c] of patches"
+
+BUTTON
+111
+71
+193
+104
+go forever
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
