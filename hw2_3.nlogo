@@ -1,40 +1,40 @@
-patches-own [
-  c
+globals [
+  N
 ]
 
 to setup
-  ;clear-all
-  ask patches [
-    set c 0
-    set pcolor white
-  ]
 
+  set N count patches
+  ask patches [
+    ifelse random 100 < initial-pop
+    [ set pcolor black ]
+    [ set pcolor white ]
+  ]
   reset-ticks
 end
 
+
+
 to go
-
-  ask patches [
-    let neighbor-patches patches at-points [
-      [-1 -1] [-1 0] [-1 1] [0 -1] [1 1] [1 -1]
-    ]
-
-    let epsilon 0
-    ifelse random 2 = 0 [set epsilon -1] [set epsilon 1]
-    set c (c + weight-w * sum [c] of neighbor-patches) / (count neighbor-patches + 1) + noise * epsilon
-  ]
-
-  if count patches with [pcolor != black] = 0 [stop]
-  colour-patches
+  if not any? patches with [pcolor = black] [ stop ]
+  repeat N [
+    ask one-of patches [
+      ifelse pcolor = black
+      [ death-event ]
+      [ birth-event ]
+  ] ]
   tick
 end
 
+to death-event
+  if random-float 1 < delta [set pcolor white]
+end
 
-to colour-patches
-  ask patches with [pcolor != black][
-    ifelse c > threshold [set pcolor black][
-      set pcolor scale-color black c threshold 0
-  ]]
+to birth-event
+  let neighbor-patches patches at-points [
+    [-1 -1] [-1 0] [-1 1] [0 -1] [1 1] [1 -1]
+  ]
+  if random-float 1 < (count neighbor-patches with [pcolor = black] / count neighbor-patches) [set pcolor black]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -98,21 +98,6 @@ NIL
 NIL
 1
 
-SLIDER
-19
-113
-191
-146
-weight-w
-weight-w
-0
-1
-0.5
-0.1
-1
-NIL
-HORIZONTAL
-
 BUTTON
 111
 71
@@ -130,49 +115,34 @@ NIL
 NIL
 1
 
-SLIDER
-21
-183
-193
-216
-threshold
-threshold
-0
-3
-0.5
-0.5
-1
-NIL
-HORIZONTAL
-
 PLOT
 719
 22
 1274
 509
-Number of  black patches
+Population
 NIL
 NIL
 0.0
-10.0
+1.0
 0.0
-10.0
+1.0
 true
 false
 "" ""
 PENS
-"default" 1.0 2 -16777216 true "" "plotxy ticks count patches with [pcolor = black]"
+"default" 1.0 2 -16777216 true "" "plotxy ticks count patches with [pcolor = black] / count patches"
 
 SLIDER
-21
-221
-193
-254
-noise
-noise
+19
+130
+191
+163
+delta
+delta
 0
 1
-0.2
+0.6
 0.1
 1
 NIL
@@ -194,6 +164,21 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+18
+168
+190
+201
+initial-pop
+initial-pop
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
